@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { WalletConnection } from './WalletConnection';
 import { NeonButton } from './ui/neon-button';
+import { MarketplaceModal } from './MarketplaceModal';
+import { CollectionModal } from './CollectionModal';
 
 export const Header: React.FC = () => {
   const location = useLocation();
+  const [isMarketplaceOpen, setIsMarketplaceOpen] = useState(false);
+  const [isCollectionOpen, setIsCollectionOpen] = useState(false);
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -15,7 +19,11 @@ export const Header: React.FC = () => {
   ];
 
   const handleModalLink = (name: string) => {
-    alert(`${name} section coming soon! This will open a modal in the full implementation.`);
+    if (name === 'Marketplace') {
+      setIsMarketplaceOpen(true);
+    } else if (name === 'Collection') {
+      setIsCollectionOpen(true);
+    }
   };
 
   return (
@@ -69,6 +77,10 @@ export const Header: React.FC = () => {
           </NeonButton>
         </div>
       </div>
+
+      {/* Modals */}
+      <MarketplaceModal isOpen={isMarketplaceOpen} onClose={() => setIsMarketplaceOpen(false)} />
+      <CollectionModal isOpen={isCollectionOpen} onClose={() => setIsCollectionOpen(false)} />
     </header>
   );
 };
