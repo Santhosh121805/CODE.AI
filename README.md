@@ -61,6 +61,11 @@ clone the repo https://github.com/Santhosh121805/CODE.AI
 npm install
  npm run dev
 
+ Live Demo
+ https://drive.google.com/file/d/19fuPvaCo3e5Pcf-ucHhGKPhDRwLq-3tF/view?usp=sharing
+ ppt
+ https://docs.google.com/presentation/d/11x0E_sVYk5gatVxFZte9TiDVxu2ZE1Qd/edit?usp=drive_link&ouid=116523191799848065594&rtpof=true&sd=true
+
 
 
 File Structure
