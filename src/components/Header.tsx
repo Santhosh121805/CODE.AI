@@ -16,6 +16,7 @@ export const Header: React.FC = () => {
     { name: 'Collection', path: '#', isModal: true },
     { name: 'Profile', path: '/profile' },
     { name: 'Pages', path: '/pages' },
+    { name: 'Login', path: '/login' },
   ];
 
   const handleModalLink = (name: string) => {

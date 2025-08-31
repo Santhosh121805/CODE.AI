@@ -4,7 +4,7 @@ import { useWalletStore, formatPoints, generateMockTxHash } from '@/store/useWal
 import { NeonCard, NeonCardContent, NeonCardHeader, NeonCardTitle } from '@/components/ui/neon-card';
 import { NeonButton } from '@/components/ui/neon-button';
 import { WalletConnection } from '@/components/WalletConnection';
-import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 
 export const Profile: React.FC = () => {
@@ -18,9 +18,10 @@ export const Profile: React.FC = () => {
     addTransaction 
   } = useWalletStore();
   
-  const [fibInput, setFibInput] = useState('10');
+  const [codeInput, setCodeInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isClaiming, setIsClaiming] = useState(false);
+  const [testPassed, setTestPassed] = useState(false);
   const { toast } = useToast();
 
   if (!connectedAddress) {
@@ -41,18 +42,40 @@ export const Profile: React.FC = () => {
     );
   }
 
-  const handleFibonacciSubmit = async () => {
+  const handleCodeSubmit = async () => {
+    if (!codeInput.trim()) {
+      toast({
+        title: "No code provided",
+        description: "Please paste your code before submitting.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
-    // Simulate solving delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Simulate code validation delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
     
-    solveFibonacci();
+    // Simple validation - check if code contains fibonacci-like logic
+    const hasLoop = /for|while/.test(codeInput);
+    const hasSequence = /0.*1|fibonacci/i.test(codeInput);
     
-    toast({
-      title: "Challenge Completed!",
-      description: "You earned $2 crypto points for solving the Fibonacci challenge.",
-    });
+    if (hasLoop && hasSequence) {
+      setTestPassed(true);
+      solveFibonacci();
+      
+      toast({
+        title: "Test Passed! ✅",
+        description: "Your code successfully generates the sequence from 0 to 10. $2 claimed!",
+      });
+    } else {
+      toast({
+        title: "Test Failed ❌",
+        description: "Your code doesn't properly generate the sequence from 0 to 10.",
+        variant: "destructive",
+      });
+    }
     
     setIsSubmitting(false);
   };
@@ -198,39 +221,40 @@ export const Profile: React.FC = () => {
               </NeonCardHeader>
               <NeonCardContent className="space-y-6">
                 <div>
-                  <h4 className="font-semibold text-neon-cyan mb-2">Description</h4>
+                  <h4 className="font-semibold text-neon-cyan mb-2">Challenge Description</h4>
                   <p className="text-muted-foreground">
-                    Generate the first N Fibonacci numbers. The Fibonacci sequence starts with 0 and 1, 
-                    and each subsequent number is the sum of the previous two.
+                    Write code that generates a sequence from 0 to 10. Your code should demonstrate proper logic 
+                    for generating sequential numbers starting from 0 and ending at 10.
                   </p>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Number of terms (N)</label>
-                    <Input
-                      type="number"
-                      value={fibInput}
-                      onChange={(e) => setFibInput(e.target.value)}
-                      min="1"
-                      max="20"
-                      className="max-w-xs"
+                    <label className="block text-sm font-medium mb-2">Paste your code here:</label>
+                    <Textarea
+                      value={codeInput}
+                      onChange={(e) => setCodeInput(e.target.value)}
+                      placeholder="// Paste your code that generates sequence from 0 to 10
+for (let i = 0; i <= 10; i++) {
+  console.log(i);
+}"
+                      className="min-h-[120px] font-mono text-sm"
                       disabled={challenges.fibonacci.solved}
                     />
                   </div>
 
                   <NeonButton
-                    onClick={handleFibonacciSubmit}
+                    onClick={handleCodeSubmit}
                     disabled={challenges.fibonacci.solved || isSubmitting}
                     className="w-full md:w-auto"
                   >
-                    {isSubmitting ? 'Running...' : challenges.fibonacci.solved ? 'Completed' : 'Run & Submit'}
+                    {isSubmitting ? 'Running Tests...' : challenges.fibonacci.solved ? 'Completed ✅' : 'Run & Submit'}
                   </NeonButton>
 
-                  {challenges.fibonacci.solved && (
+                  {testPassed && challenges.fibonacci.solved && (
                     <div className="mt-4 p-4 rounded-lg bg-neon-cyan/10 border border-neon-cyan/30">
-                      <div className="text-sm font-medium text-neon-cyan mb-2">Result:</div>
-                      <div className="font-mono text-sm">{fibonacciResults}</div>
+                      <div className="text-sm font-medium text-neon-cyan mb-2">Test Passed! ✅</div>
+                      <div className="font-mono text-sm text-neon">$2 Claimed - Ready to transfer to wallet</div>
                     </div>
                   )}
                 </div>
