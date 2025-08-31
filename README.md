@@ -56,7 +56,12 @@ Backend:
 
 📦 Installation & Setup
 
-(To be updated once repository is populated with code.)
+clone the repo https://github.com/Santhosh121805/CODE.AI
+
+npm install
+ npm run dev
+
+
 
 File Structure
 
