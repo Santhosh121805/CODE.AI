@@ -35,7 +35,7 @@ Frontend:
 · HTML, CSS, TypeScript
 · React
 · Tailwind CSS
-· Shadcn-UI
+· Lovable-UI
 
 Backend:
 
